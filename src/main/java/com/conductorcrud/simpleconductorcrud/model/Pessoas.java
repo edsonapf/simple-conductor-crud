@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.sql.Date;
 
 @AllArgsConstructor
@@ -15,7 +16,7 @@ import java.sql.Date;
 @Entity
 public class Pessoas {
 
-    @idPessoa
+    @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long idPessoa;
 
