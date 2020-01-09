@@ -4,11 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.sql.Date;
+import javax.persistence.*;
+import java.util.Date;
 
 @AllArgsConstructor //cria automaticamente um construtor com todas os atributos da classe como argumento
 @NoArgsConstructor //cria automaticamente um construtor vazio (sem argumentos).
@@ -20,7 +17,10 @@ public class Contas {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long idConta;
 
-    private Long idPessoa;
+    @ManyToOne
+    @JoinColumn(name="idPessoa")
+    private Pessoas idPessoa;
+
     private double saldo;
     private double limiteSaqueDiario;
     private boolean flagAtivo;

@@ -4,11 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.sql.Date;
+import javax.persistence.*;
+import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +17,10 @@ public class Transacoes {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long idTransacao;
 
-    private Long idConta;
+    @ManyToOne
+    @JoinColumn(name="idConta")
+    private Contas idConta;
+
     private double valor;
     private Date dataTransacao;
 

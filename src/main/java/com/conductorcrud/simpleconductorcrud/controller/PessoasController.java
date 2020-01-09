@@ -38,9 +38,9 @@ public class PessoasController {
     public ResponseEntity update(@PathVariable("idPessoa") long idPessoa, @RequestBody Pessoas pessoa){
         return pessoasRepository.findById(idPessoa)
                 .map(record -> {
-                    record.setNome(pessoa.getNome());
-                    record.setCpf(pessoa.getCpf());
-                    record.setDataNascimento(pessoa.getDataNascimento());
+                    if (pessoa.getNome() != null)    record.setNome(pessoa.getNome());
+                    if (pessoa.getCpf() != null)    record.setCpf(pessoa.getCpf());
+                    if (pessoa.getDataNascimento() != null)    record.setDataNascimento(pessoa.getDataNascimento());
                     Pessoas updatedPessoa = pessoasRepository.save(record);
                     return ResponseEntity.ok().body(updatedPessoa);
                 })

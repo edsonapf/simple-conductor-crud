@@ -26,7 +26,7 @@ public class SimpleConductorCrudApplication {
 					.mapToObj(i -> {
 						Pessoas p = new Pessoas();
 						p.setNome("Pessoa " + i);
-						p.setCpf("81889029311");
+						p.setCpf("" + i + i);
 						p.setDataNascimento(new Date(new java.util.Date().getTime()));
 						return p;
 					})
