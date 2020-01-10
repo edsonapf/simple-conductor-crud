@@ -1,11 +1,11 @@
 package com.conductorcrud.simpleconductorcrud.controller;
 
+import com.conductorcrud.simpleconductorcrud.Utils.RequestJson;
 import com.conductorcrud.simpleconductorcrud.model.Contas;
 import com.conductorcrud.simpleconductorcrud.model.Pessoas;
 import com.conductorcrud.simpleconductorcrud.repository.ContasRepository;
 import com.conductorcrud.simpleconductorcrud.repository.PessoasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,16 +35,29 @@ public class ContasController {
 
     }
 
-    @PostMapping(path={"/{cpf}"})
-    public ResponseEntity create(@PathVariable("cpf") String cpf, @RequestBody Contas conta){
-        Pessoas pessoa = pessoasRepository.findByCpf(cpf);
+    /**
+     * Cria conta passando o cpf e os dados da conta no body da requisição
+     * ex:
+     *  cpf: XXXXXXXXXXX
+     *  conta: {
+     *      saldo: 10.0,
+     *      limiteSaqueDiario: 10.o,
+     *      tipoConta: 1
+     *  }
+     * @param req
+     * @return
+     */
+    @PostMapping(path={"/criarConta"})
+    public ResponseEntity create(@RequestBody RequestJson req){
+        Pessoas pessoa = pessoasRepository.findByCpf(req.getCpf());
         if(pessoa == null){
             return ResponseEntity.notFound().build();
         }
 
-        conta.setIdPessoa(pessoa);
-        conta.setDataCriacao(new Date());
-        return ResponseEntity.ok().body(contasRepository.save(conta));
+        req.getConta().setIdPessoa(pessoa);
+        req.getConta().setFlagAtivo(true);
+        req.getConta().setDataCriacao(new Date());
+        return ResponseEntity.ok().body(contasRepository.save(req.getConta()));
     }
 
     @PutMapping(value="/{idConta}")
@@ -59,6 +72,38 @@ public class ContasController {
                     return ResponseEntity.ok().body(updatedConta);
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Ativa conta passando o idConta como parâmetro da requisição
+     * @param idConta
+     * @return
+     */
+    @PutMapping(path={"/ativarConta/{idConta}"})
+    public ResponseEntity<String> activateAccount(@PathVariable("idConta") Long idConta) {
+        Contas conta = this.contasRepository.getOne(idConta);
+        if(conta.getFlagAtivo())
+            return ResponseEntity.noContent().build();
+
+        conta.setFlagAtivo(true);
+        this.contasRepository.save(conta);
+        return ResponseEntity.ok().body("Usuário ativado!");
+    }
+
+    /**
+     * Desativa conta passando o idConta como parâmetro da requisição
+     * @param idConta
+     * @return
+     */
+    @PutMapping(path={"/desativarConta/{idConta}"})
+    public ResponseEntity<String> desactivateAccount(@PathVariable("idConta") Long idConta) {
+        Contas conta = this.contasRepository.getOne(idConta);
+        if(!conta.getFlagAtivo())
+            return ResponseEntity.noContent().build();
+
+        conta.setFlagAtivo(false);
+        this.contasRepository.save(conta);
+        return ResponseEntity.ok().body("Usuário desativado!");
     }
 
     @DeleteMapping(path={"/{idConta}"})

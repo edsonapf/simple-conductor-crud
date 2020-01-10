@@ -18,7 +18,10 @@ public class Contas {
     private Long idConta;
 
     @ManyToOne
-    @JoinColumn(name="idPessoa")
+    @JoinColumns({
+            @JoinColumn(name="idPessoa", referencedColumnName = "idPessoa"),
+            @JoinColumn(name="cpf", referencedColumnName = "cpf")
+    })
     private Pessoas idPessoa;
 
     private double saldo;
@@ -27,4 +30,12 @@ public class Contas {
     private int tipoConta;
     private Date dataCriacao;
 
+
+    public boolean getFlagAtivo() {
+        return this.flagAtivo;
+    }
+
+    public void setFlagAtivo(boolean flagAtivo) {
+        this.flagAtivo = flagAtivo;
+    }
 }

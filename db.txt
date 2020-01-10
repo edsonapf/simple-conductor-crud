@@ -1,0 +1,3 @@
+alter table contas add constraint FKdieayyuuoj11pfrb5wxfjinvk foreign key (id_pessoa, cpf) references pessoas (id_pessoa, cpf);
+
+create table pessoas (id_pessoa bigint not null auto_increment, cpf varchar(255) not null, data_nascimento datetime, nome varchar(255), primary key (id_pessoa, cpf)) engine=InnoDB;

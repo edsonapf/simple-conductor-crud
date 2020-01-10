@@ -23,5 +23,13 @@ public class Transacoes {
 
     private double valor;
     private Date dataTransacao;
+    private String tipoTransacao;
+
+    public Transacoes(Contas idConta, double valor, Date dataTransacao, String tipoTransacao) {
+        this.idConta = idConta;
+        this.valor = valor;
+        this.dataTransacao = dataTransacao;
+        this.tipoTransacao = tipoTransacao;
+    }
 
 }
