@@ -12,16 +12,14 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @Entity
-@IdClass(PessoasId.class)
+//@IdClass(PessoasId.class)
 public class Pessoas {
-
-    @Id
-    private String cpf;
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long idPessoa;
 
+    private String cpf;
     private String nome;
     private Date dataNascimento;
 

@@ -6,6 +6,7 @@ import com.conductorcrud.simpleconductorcrud.model.Transacoes;
 import com.conductorcrud.simpleconductorcrud.repository.ContasRepository;
 import com.conductorcrud.simpleconductorcrud.repository.TransacoesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,13 +45,17 @@ public class TransacoesController {
         if(conta == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok().body(this.transacoesRepository.findByIdContaOrderByDataTransacao(conta));
+        return ResponseEntity.ok().body(this.transacoesRepository.findByIdConta(conta));
     }
 
     /**
      * TODO
      * Recupera o extrato em um certo período passando o idConta como parâmetro da requisição
      * e a data limite no body da requisição
+     * {
+     *     "dataInicial": "2020-01-09T00:00:00",
+     *     "dataFinal": "2020-01-10T15:00:41"
+     * }
      * @param idConta
      * @param data
      * @return
@@ -61,12 +66,7 @@ public class TransacoesController {
         if(conta == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping
-    public Transacoes create(@RequestBody Transacoes transacao){
-        return transacoesRepository.save(transacao);
+        return ResponseEntity.ok().body(transacoesRepository.findByIdContaAndDataTransacaoBetween(conta, data.getDataInicial(), data.getDataFinal()));
     }
 
     /**
@@ -88,8 +88,6 @@ public class TransacoesController {
         conta.setSaldo(conta.getSaldo() + transacao.getValor());
         this.transacoesRepository.save(transacao);
         this.contasRepository.save(conta);
-        System.out.println(transacao.toString());
-        System.out.println(conta.toString());
         return ResponseEntity.ok().build();
     }
 
@@ -106,15 +104,16 @@ public class TransacoesController {
         if(conta == null)
             return ResponseEntity.notFound().build();
 
+        if(conta.getSaldo() - transacao.getValor() < 0)
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Não há saldo disponível para esse saque.");
+
         transacao.setIdConta(conta);
         transacao.setDataTransacao(new Date());
         transacao.setTipoTransacao("SAQUE");
         conta.setSaldo(conta.getSaldo() - transacao.getValor());
         this.transacoesRepository.save(transacao);
         this.contasRepository.save(conta);
-        System.out.println(transacao.toString());
-        System.out.println(conta.toString());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Saque realizado com sucesso!");
     }
 
     @PutMapping(value="/{idTransacoes}")

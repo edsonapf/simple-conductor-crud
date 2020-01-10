@@ -57,7 +57,8 @@ public class ContasController {
         req.getConta().setIdPessoa(pessoa);
         req.getConta().setFlagAtivo(true);
         req.getConta().setDataCriacao(new Date());
-        return ResponseEntity.ok().body(contasRepository.save(req.getConta()));
+        contasRepository.save(req.getConta());
+        return ResponseEntity.ok().body("Conta criada com sucesso!");
     }
 
     @PutMapping(value="/{idConta}")

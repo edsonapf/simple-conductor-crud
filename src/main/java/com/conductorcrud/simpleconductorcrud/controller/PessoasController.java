@@ -2,6 +2,7 @@ package com.conductorcrud.simpleconductorcrud.controller;
 
 import com.conductorcrud.simpleconductorcrud.model.Pessoas;
 import com.conductorcrud.simpleconductorcrud.repository.PessoasRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,19 +31,23 @@ public class PessoasController {
     }
 
     @PostMapping
-    public Pessoas create(@RequestBody Pessoas pessoa){
-        return pessoasRepository.save(pessoa);
+    public ResponseEntity createAccount(@RequestBody Pessoas pessoa){
+        if(pessoasRepository.findByCpf(pessoa.getCpf()) != null)
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário já existe!");
+
+        pessoasRepository.save(pessoa);
+        return ResponseEntity.ok().body("Usuário criado com sucesso!");
     }
 
     @PutMapping(value="/{idPessoa}")
-    public ResponseEntity update(@PathVariable("idPessoa") long idPessoa, @RequestBody Pessoas pessoa){
+    public ResponseEntity updateAccount(@PathVariable("idPessoa") long idPessoa, @RequestBody Pessoas pessoa){
         return pessoasRepository.findById(idPessoa)
                 .map(record -> {
-                    if (pessoa.getNome() != null)    record.setNome(pessoa.getNome());
-                    if (pessoa.getCpf() != null)    record.setCpf(pessoa.getCpf());
+                    if (pessoa.getNome() != null || pessoa.getNome().isEmpty())    record.setNome(pessoa.getNome());
+                    if (pessoa.getCpf() != null || pessoa.getNome().isEmpty())    record.setCpf(pessoa.getCpf());
                     if (pessoa.getDataNascimento() != null)    record.setDataNascimento(pessoa.getDataNascimento());
                     Pessoas updatedPessoa = pessoasRepository.save(record);
-                    return ResponseEntity.ok().body(updatedPessoa);
+                    return ResponseEntity.ok().body("Usuário atualizado!");
                 })
                 .orElse(ResponseEntity.notFound().build());
     }

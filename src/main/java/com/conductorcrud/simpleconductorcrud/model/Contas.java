@@ -1,5 +1,6 @@
 package com.conductorcrud.simpleconductorcrud.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.Date;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @AllArgsConstructor //cria automaticamente um construtor com todas os atributos da classe como argumento
 @NoArgsConstructor //cria automaticamente um construtor vazio (sem argumentos).
 @Data //cria automaticamente os métodos toString, equals, hashCode, getters e setters.
@@ -18,10 +20,10 @@ public class Contas {
     private Long idConta;
 
     @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name="idPessoa", referencedColumnName = "idPessoa"),
-            @JoinColumn(name="cpf", referencedColumnName = "cpf")
-    })
+//    @JoinColumns({
+    @JoinColumn(name="idPessoa", referencedColumnName = "idPessoa")
+//            @JoinColumn(name="cpf", referencedColumnName = "cpf")
+//    })
     private Pessoas idPessoa;
 
     private double saldo;

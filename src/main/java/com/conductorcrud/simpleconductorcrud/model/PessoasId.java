@@ -1,15 +1,33 @@
 package com.conductorcrud.simpleconductorcrud.model;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
 public class PessoasId implements Serializable {
 
-    private String cpf;
     private Long idPessoa;
+    private String cpf;
 
     public PessoasId(){}
     public PessoasId(Long idPessoa, String cpf) {
         this.idPessoa = idPessoa;
+        this.cpf = cpf;
+    }
+
+    public Long getIdPessoa() {
+        return this.idPessoa;
+    }
+
+    public void setIdPessoa(Long idPessoa) {
+        this.idPessoa = idPessoa;
+    }
+
+    public String getCpf() {
+        return this.cpf;
+    }
+
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
@@ -22,7 +40,7 @@ public class PessoasId implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         PessoasId other = (PessoasId) obj;
-        if (idPessoa == other.idPessoa)
+        if (idPessoa != other.idPessoa)
             return false;
         if (cpf == null) {
             if (other.cpf != null)
